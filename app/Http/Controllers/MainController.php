@@ -4,75 +4,57 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Typology;
+use App\Models\Product;
 
 class MainController extends Controller
 {
+    // METODO CON LISTA PRODOTTI SUDDIVISI PER CATEGORIA IN HOME:
     public function home(){
-        $categories = Category :: all();
-        // dd($categories);
-        return view('pages.home', compact("categories"));
+
+        $categories = Category::all();
+
+        return view('pages.home', compact('categories'));
     }
 
+    // METODO CON LISTA PRODOTTI:
     public function products(){
-       
-        $products = Product :: orderBy('created_at', 'DESC') -> get();
-        // dd($products);
-        return view('pages.products', compact('products'));
+
+        $products = Product:: all();
+        
+        return view ('pages.product.home', compact('products'));
     }
-    public function createNew(){
-        $categories = Category :: all();
-        $typologies = Typology :: all();
-        return view('pages.createnew',compact('categories', 'typologies'));
+
+    // METODO FORM:
+    public function create(){
+
+        $typologies = Typology::all();
+
+        return view ('pages.product.create', compact('typologies'));
     }
-    public function store(Request $request){
-        $data = $request -> validate([
-            'name' => 'required|max:32',
-            'description' => 'required|max:200',
-            'price' => 'numeric|between:1,5000',
-            'weight' => 'numeric',
-            'typology' => 'required|integer',
-            'categories' => 'required|array'
+
+    // METODO PER RICEZIONE DATI DA FORM:
+    public function productStore(Request $request){
+
+        $data= $request -> validate([
+            'name' => 'required|string|max:64', 
+            'description' => 'nullable|string',
+            'price' => 'required|integer',
+            'weight' => 'required|integer',
+            'typology_id' => 'required|string'
         ]);
-        $code = rand(10000,99999);
+
+        // mi genero un codice randomico per non spaccare la pagina dal momento che non ho creato l'input per il code nel 
+        // form:
+        $code = rand(10000, 9999 );
         $data['code'] = $code;
 
-        $product = Product :: make($data);
-        $typology = Typology :: find($data['typology']);
+        $product = Product::make($data);
+        $typology = Typology::find($data['typology_id']);
+        $product -> typology()->associate($typology);
 
-        $product -> typology() -> associate($typology);
         $product -> save();
 
-        $categories = Category :: find($data['categories']);
-        $product -> categories() -> attach($categories); 
-        // dd($categories);
-        return redirect() -> route('products-home');
-    }
-    // redirect to edit page
-    public function edit(Product $product){
-
-        $categories = Category :: all();
-        $typologies = Typology :: all();
-
-        return view('pages.editproduct',compact('categories','typologies','product'));
-    }
-    public function update(Request $request, Product $product){
-            $data = $request -> validate([
-                'name' => 'required|max:32',
-                'description' => 'required|max:200',
-                'price' => 'numeric|between:1,5000',
-                'weight' => 'numeric',
-                'typology' => 'required|integer',
-                'categories' => 'required|array'
-            ]);
-            $product -> update($data);
-
-            $typology = Typology :: find($data['typology']);
-            $product -> typology() -> associate($typology);
-            $product -> save();
-
-            $categories = Category :: find($data['categories']);
-            $product -> categories() -> sync($categories);
-
-            return redirect() -> route('pages.home');
+        return redirect()-> route('product.home');
     }
 }

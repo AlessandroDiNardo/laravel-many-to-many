@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Products</h1>
-
+    <a href="{{ route ('product.create')}}">CREATE</a>
     @foreach ($categories as $category)
         <h2>Category: {{$category -> name}}</h2>
 
