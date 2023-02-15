@@ -1,25 +1,45 @@
 @extends('layouts.main-layout')
 
-@section('content')
-    <h1>Products</h1>
-
-    @foreach ($categories as $category)
-        <h2>Category: {{$category -> name}}</h2>
-
-        <ul>
-            @foreach ($category -> products as $product)
-                <li>
-                    <div>
-                        <strong>Products name:</strong> {{$product -> name}} 
+@section('contents')
+    <div class="container">
+        <h1>PRODUCTS</h1>
+        <div class="col-6 m-auto d-flex flex-wrap">
+            @foreach ($categories as $category)
+            <h3 class="text-success">Category: {{$category -> name}}</h3>
+                @foreach ($category -> products as $product)
+                    <div class="myItem flex-column">
+                            <h3> {{$product -> name}}</h3>                
+                        <div>
+                            <span class="fw-bold text-info">Description:</span>
+                            <span>{{$product -> description}}</span>
+                        </div>
+                        <div>
+                            <span class="fw-bold text-info">Price:</span>
+                            <span>{{$product -> price}} &euro;</span>
+                        </div>
+                        <div>
+                            <span class="fw-bold text-info">Weight:</span>
+                            <span>{{$product -> weight}} &euro;</span>
+                        </div>
+                        <div>
+                            <span class="fw-bold text-info">Product Code</span>
+                            <span>[{{$product -> code}}]</span>
+                        </div>
+                        <div class="d-flex ">
+                            <span class="mx-3 text-warning">Typology: </span>
+                            <span> {{$product -> typology -> name}}</span>
+                        </div>
+                        <div class="d-flex">
+                            <span class="mx-3 text-warning">Is Digital? </span>
+                            <span> {{$product -> typology -> digital ? "Yes" : "No"}}</span>
+                        </div>  
+                        <a href="{{route('product.edit', $product)}}">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
                     </div>  
-                    <div>
-                        <strong>Typology name:</strong> {{$product -> typology -> name}} 
-                    </div> 
-                    <div>
-                        <strong>Digital:</strong> {{$product -> typology -> digital ? "Yes" : "No"}}
-                    </div>
-                </li>
-            @endforeach
-        </ul>
-    @endforeach
+                @endforeach
+             @endforeach
+        </div>
+    </div>
+
 @endsection
