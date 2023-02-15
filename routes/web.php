@@ -3,20 +3,22 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\MainController;
+
 Route :: get('/', [MainController :: class , 'home'])
     -> name('pages.home');
 
-Route :: get('/product', [MainController :: class , 'products'])
-    -> name('products-home');
+// show
+Route :: get('/products', [MainController :: class , 'products'])
+    -> name('product.home');
 
-// create new
-Route :: get('/product/createnew',[MainController :: class , 'createNew'])
+// create 
+Route :: get('/product/create',[MainController :: class , 'create'])
     -> name('product.create');
-Route :: post('/product/createnew',[MainController :: class , 'store'])
+Route :: post('/product/create',[MainController :: class , 'store'])
     ->name('product.store');
-// edit product
 
-Route :: get('/product/editproduct/{product}' , [MainController :: class, 'edit'])
+// edit product
+Route :: get('/product/edit/{product}' , [MainController :: class, 'edit'])
     -> name('product.edit');
-Route :: post('/product/editproduct/{product}' , [MainController :: class, 'update'])
+Route :: post('/product/edit/{product}' , [MainController :: class, 'update'])
     -> name('product.update');

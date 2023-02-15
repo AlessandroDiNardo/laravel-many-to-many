@@ -3,15 +3,6 @@
 @section('contents')
 <div class="container">
     <h2>Create new Product:</h2>
-    @if ($errors ->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors -> all() as $error)
-                    <li> {{$error}} </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <form action="{{route('product.store')}}" method="POST" class="d-flex flex-column col-4 mx-auto">
         @csrf
         <div class="input-group input-group-sm mb-3">
